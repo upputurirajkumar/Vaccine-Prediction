@@ -611,9 +611,33 @@ Insurance: ${this.state.health_insurance === 1 ? 'Covered' : 'Uninsured'}
 Perceived Risk: ${this.state.opinion_h1n1_risk}/5 | Efficacy Belief: ${this.state.opinion_h1n1_vacc_effective}/5
 Source Model: Tuned XGBoost (ROC-AUC 0.8351, 83.88% Accuracy)`;
 
-    navigator.clipboard.writeText(text).then(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        window.VaxComponents.showToast('Summary report copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for clipboard permission issue
+        this.fallbackCopyText(text);
+      });
+    } else {
+      this.fallbackCopyText(text);
+    }
+  },
+
+  fallbackCopyText(text) {
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
       window.VaxComponents.showToast('Summary report copied to clipboard!', 'success');
-    });
+    } catch (e) {
+      window.VaxComponents.showToast('Could not copy report automatically.', 'info');
+    }
   },
 
   computeH1N1Probability() {

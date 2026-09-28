@@ -13,7 +13,7 @@
     <meta property="og:description" content="Interactive vaccine acceptance prediction platform and machine learning benchmark based on the CDC H1N1 and seasonal influenza dataset, featuring real-time risk scoring, feature attribution, and public health policy recommendations." />
 
     <!-- Application Stylesheet -->
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <!-- Top Sticky Header -->
@@ -870,12 +870,12 @@
       </div>
     </div>
 
-    <!-- Load Scripts in exact dependency order -->
-    <script src="/js/data.js"></script>
-    <script src="/js/charts.js"></script>
-    <script src="/js/components.js"></script>
-    <script src="/js/navigation.js"></script>
-    <script src="/js/prediction.js"></script>
-    <script src="/js/app.js"></script>
+    <!-- Load Scripts in exact dependency order with relative paths -->
+    <script src="./js/data.js" defer></script>
+    <script src="./js/charts.js" defer></script>
+    <script src="./js/components.js" defer></script>
+    <script src="./js/navigation.js" defer></script>
+    <script src="./js/prediction.js" defer></script>
+    <script src="./js/app.js" defer></script>
   </body>
 </html>

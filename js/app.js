@@ -3,10 +3,6 @@
  * Bootstraps data visualization, event binding, and reactive state.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-  window.VaxApp.init();
-});
-
 window.VaxApp = {
   activeEdaTab: 'behavior',
   edaViewMode: 'distribution', // 'distribution' | 'rate'
@@ -16,10 +12,14 @@ window.VaxApp = {
 
   init() {
     // 1. Navigation & Theme
-    window.VaxNavigation.init();
+    if (window.VaxNavigation && typeof window.VaxNavigation.init === 'function') {
+      window.VaxNavigation.init();
+    }
 
     // 2. Executive KPIs
-    window.VaxComponents.renderKPICards('vax-kpi-grid');
+    if (window.VaxComponents && typeof window.VaxComponents.renderKPICards === 'function') {
+      window.VaxComponents.renderKPICards('vax-kpi-grid');
+    }
 
     // 3. Data Cleaning Story Pipeline
     this.initDataCleaningPipeline();
@@ -37,17 +37,25 @@ window.VaxApp = {
     this.renderModelLeaderboard();
 
     // 8. ROC Curve Lab
-    window.VaxCharts.renderRocCurve('vax-roc-chart-container', 'tuned-xgboost');
+    if (window.VaxCharts && typeof window.VaxCharts.renderRocCurve === 'function') {
+      window.VaxCharts.renderRocCurve('vax-roc-chart-container', 'tuned-xgboost');
+    }
 
     // 9. Confusion Matrix
-    window.VaxCharts.renderConfusionMatrix('vax-confusion-matrix-container');
+    if (window.VaxCharts && typeof window.VaxCharts.renderConfusionMatrix === 'function') {
+      window.VaxCharts.renderConfusionMatrix('vax-confusion-matrix-container');
+    }
 
     // 10. Methodology & Challenges
-    window.VaxComponents.renderMethodologyFlow('vax-methodology-container');
-    window.VaxComponents.renderChallengeCards('vax-challenges-container');
+    if (window.VaxComponents && typeof window.VaxComponents.renderMethodologyFlow === 'function') {
+      window.VaxComponents.renderMethodologyFlow('vax-methodology-container');
+      window.VaxComponents.renderChallengeCards('vax-challenges-container');
+    }
 
     // 11. Prediction Simulator
-    window.VaxPrediction.init();
+    if (window.VaxPrediction && typeof window.VaxPrediction.init === 'function') {
+      window.VaxPrediction.init();
+    }
 
     // 12. Modal & Global Listeners
     this.bindGlobalListeners();
@@ -563,3 +571,13 @@ window.VaxApp = {
     updatePolicy(slider.value);
   }
 };
+
+// Bootstrap application safely once window.VaxApp is fully defined and DOM is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.VaxApp.init();
+  });
+} else {
+  window.VaxApp.init();
+}
+
