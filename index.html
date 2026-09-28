@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💉</text></svg>" />
@@ -11,9 +11,871 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Vaccine Uptake Predictor &amp; ML Analytics" />
     <meta property="og:description" content="Interactive vaccine acceptance prediction platform and machine learning benchmark based on the CDC H1N1 and seasonal influenza dataset, featuring real-time risk scoring, feature attribution, and public health policy recommendations." />
+
+    <!-- Application Stylesheet -->
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
-  <body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body>
+    <!-- Top Sticky Header -->
+    <header class="vax-header">
+      <div class="vax-container vax-header-inner">
+        <!-- 1. Left: Branding Area -->
+        <a href="#overview" class="vax-brand" aria-label="Vaccine Intelligence Home">
+          <div class="vax-brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="vax-brand-text">
+            <div class="vax-brand-headline">
+              <span class="vax-brand-name">Vaccine Intelligence</span>
+              <span class="vax-brand-badge">PRCP-1014</span>
+            </div>
+            <span class="vax-brand-desc">CDC 2009 National Flu Survey</span>
+          </div>
+        </a>
+
+        <!-- 2. Center: Hierarchical Primary Navigation -->
+        <nav class="vax-nav" aria-label="Main Navigation">
+          <!-- Overview -->
+          <a href="#overview" class="vax-nav-item active" data-nav-section="overview">
+            <span>Overview</span>
+          </a>
+
+          <!-- Data Dropdown -->
+          <div class="vax-nav-dropdown-group" data-nav-group="data">
+            <button class="vax-nav-item vax-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              <span>Data</span>
+              <svg class="vax-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="vax-dropdown-menu">
+              <a href="#data-intelligence" class="vax-dropdown-link" data-nav-section="data-intelligence">
+                <div class="vax-dropdown-link-icon">⚙️</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Data Pipeline</span>
+                  <span class="vax-dropdown-link-desc">Merge, audit &amp; transformation flow</span>
+                </div>
+              </a>
+              <a href="#data-intelligence" class="vax-dropdown-link" data-nav-section="data-intelligence">
+                <div class="vax-dropdown-link-icon">🧹</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Data Quality &amp; Imputation</span>
+                  <span class="vax-dropdown-link-desc">Median Likert &amp; mode nominal imputation</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- EDA Dropdown -->
+          <div class="vax-nav-dropdown-group" data-nav-group="eda">
+            <button class="vax-nav-item vax-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              <span>EDA</span>
+              <svg class="vax-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="vax-dropdown-menu">
+              <a href="#eda" class="vax-dropdown-link" data-nav-section="eda">
+                <div class="vax-dropdown-link-icon">📊</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Uptake Patterns</span>
+                  <span class="vax-dropdown-link-desc">Demographic &amp; clinical distributions</span>
+                </div>
+              </a>
+              <a href="#statistical-evidence" class="vax-dropdown-link" data-nav-section="statistical-evidence">
+                <div class="vax-dropdown-link-icon">📐</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Statistical Tests</span>
+                  <span class="vax-dropdown-link-desc">Correlation heatmap &amp; Chi-Square (χ²)</span>
+                </div>
+              </a>
+              <a href="#features" class="vax-dropdown-link" data-nav-section="features">
+                <div class="vax-dropdown-link-icon">🎯</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Feature Signals</span>
+                  <span class="vax-dropdown-link-desc">XGBoost &amp; CatBoost impurity rankings</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Models Dropdown -->
+          <div class="vax-nav-dropdown-group" data-nav-group="models">
+            <button class="vax-nav-item vax-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              <span>Models</span>
+              <svg class="vax-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="vax-dropdown-menu">
+              <a href="#model-lab" class="vax-dropdown-link" data-nav-section="model-lab">
+                <div class="vax-dropdown-link-icon">🏆</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Model Lab</span>
+                  <span class="vax-dropdown-link-desc">9-Classifier benchmark leaderboard</span>
+                </div>
+              </a>
+              <a href="#roc-lab" class="vax-dropdown-link" data-nav-section="roc-lab">
+                <div class="vax-dropdown-link-icon">📈</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">ROC Curves</span>
+                  <span class="vax-dropdown-link-desc">Multi-model discrimination curves</span>
+                </div>
+              </a>
+              <a href="#confusion-matrix" class="vax-dropdown-link" data-nav-section="confusion-matrix">
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Confusion Matrix</span>
+                  <span class="vax-dropdown-link-desc">Diagnostic error breakdown on test</span>
+                </div>
+              </a>
+              <a href="#optimization" class="vax-dropdown-link" data-nav-section="optimization">
+                <div class="vax-dropdown-link-icon">🧪</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Validation &amp; Tuning</span>
+                  <span class="vax-dropdown-link-desc">RandomizedSearchCV &amp; 5-Fold CV</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Prediction -->
+          <a href="#simulator" class="vax-nav-item" data-nav-section="simulator">
+            <span>Prediction</span>
+          </a>
+
+          <!-- Insights Dropdown -->
+          <div class="vax-nav-dropdown-group" data-nav-group="insights">
+            <button class="vax-nav-item vax-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              <span>Insights</span>
+              <svg class="vax-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="vax-dropdown-menu">
+              <a href="#policy" class="vax-dropdown-link" data-nav-section="policy">
+                <div class="vax-dropdown-link-icon">🏛️</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Policy Intelligence</span>
+                  <span class="vax-dropdown-link-desc">4 evidence-based public health pillars</span>
+                </div>
+              </a>
+              <a href="#policy" class="vax-dropdown-link" data-nav-section="policy">
+                <div class="vax-dropdown-link-icon">🛡️</div>
+                <div class="vax-dropdown-link-info">
+                  <span class="vax-dropdown-link-title">Herd Immunity Simulation</span>
+                  <span class="vax-dropdown-link-desc">Community threshold &amp; transmission modeling</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Methods -->
+          <a href="#methodology" class="vax-nav-item" data-nav-section="methodology">
+            <span>Methods</span>
+          </a>
+        </nav>
+
+        <!-- 3. Right: Search & Controls -->
+        <div class="vax-header-actions">
+          <button id="vax-cmd-trigger" class="vax-search-btn" title="Search intelligence (⌘K / Ctrl+K)" aria-label="Search intelligence">
+            <svg class="vax-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span class="vax-search-placeholder">Search intelligence...</span>
+            <kbd id="vax-search-kbd" class="vax-search-kbd">⌘K</kbd>
+          </button>
+
+          <button id="vax-theme-toggle" class="vax-theme-btn" title="Toggle theme" aria-label="Toggle theme">
+            <svg id="vax-theme-icon-dark" class="vax-theme-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg id="vax-theme-icon-light" class="vax-theme-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Toggle Button -->
+          <button id="vax-mobile-toggle" class="vax-mobile-toggle-btn" aria-label="Toggle Navigation Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="vax-mobile-drawer" class="vax-mobile-drawer-backdrop" aria-hidden="true">
+      <div class="vax-mobile-drawer">
+        <div class="vax-mobile-drawer-header">
+          <div class="vax-brand">
+            <div class="vax-brand-icon" style="width: 32px; height: 32px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <div class="vax-brand-text">
+              <div class="vax-brand-headline">
+                <span class="vax-brand-name" style="font-size: 1rem;">Vaccine Intelligence</span>
+                <span class="vax-brand-badge">PRCP-1014</span>
+              </div>
+              <span class="vax-brand-desc">CDC 2009 National Flu Survey</span>
+            </div>
+          </div>
+          <button id="vax-mobile-close" class="vax-mobile-close-btn" aria-label="Close menu">&times;</button>
+        </div>
+
+        <div class="vax-mobile-drawer-body">
+          <button class="vax-mobile-search-btn" id="vax-mobile-cmd-trigger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Search intelligence...</span>
+            <kbd>⌘K</kbd>
+          </button>
+
+          <div class="vax-mobile-nav-group">
+            <a href="#overview" class="vax-mobile-link vax-mobile-link-top active">Overview</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <div class="vax-mobile-group-title">Data</div>
+            <a href="#data-intelligence" class="vax-mobile-link">Data Pipeline</a>
+            <a href="#data-intelligence" class="vax-mobile-link">Data Quality &amp; Imputation</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <div class="vax-mobile-group-title">EDA &amp; Statistics</div>
+            <a href="#eda" class="vax-mobile-link">Uptake Patterns</a>
+            <a href="#statistical-evidence" class="vax-mobile-link">Statistical Tests (Chi-Square)</a>
+            <a href="#features" class="vax-mobile-link">Feature Signals</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <div class="vax-mobile-group-title">Models &amp; Evaluation</div>
+            <a href="#model-lab" class="vax-mobile-link">Model Lab Leaderboard</a>
+            <a href="#roc-lab" class="vax-mobile-link">ROC Curves</a>
+            <a href="#confusion-matrix" class="vax-mobile-link">Confusion Matrix</a>
+            <a href="#optimization" class="vax-mobile-link">Validation &amp; Tuning</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <a href="#simulator" class="vax-mobile-link vax-mobile-link-top">Prediction Simulator</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <div class="vax-mobile-group-title">Insights &amp; Policy</div>
+            <a href="#policy" class="vax-mobile-link">Policy Intelligence</a>
+            <a href="#policy" class="vax-mobile-link">Herd Immunity Simulation</a>
+          </div>
+
+          <div class="vax-mobile-nav-group">
+            <a href="#methodology" class="vax-mobile-link vax-mobile-link-top">Technical Methodology</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Flow -->
+    <main>
+      <!-- Section 1: Overview & Executive KPIs -->
+      <section id="overview" class="vax-hero">
+        <div class="vax-container">
+          <div class="vax-hero-grid">
+            <div>
+              <div class="vax-hero-badge">
+                <span>🛡️ CDC 2009 Flu Survey ML Benchmark</span>
+              </div>
+              <h1 class="vax-hero-title">
+                Machine Learning for <span>Vaccine Acceptance</span> &amp; Public Health
+              </h1>
+              <p class="vax-hero-desc">
+                An empirical data science investigation predicting individual H1N1 and Seasonal Influenza immunization decisions. Evaluated 9 distinct classification algorithms across 26,707 surveyed individuals to isolate the behavioral, clinical, and perception levers that drive community uptake.
+              </p>
+              <div class="vax-hero-ctas">
+                <a href="#simulator" class="vax-btn vax-btn-primary">
+                  <span>⚡ Launch Interactive Predictor</span>
+                </a>
+                <a href="#model-lab" class="vax-btn vax-btn-secondary">
+                  <span>📊 Explore 9-Model Benchmark</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="vax-hero-visual">
+              <div class="vax-hero-visual-header">
+                <span>BENCHMARK_STATUS: VERIFIED</span>
+                <span>DATA: CDC_NHFS_2009</span>
+              </div>
+              <div class="vax-champ-kpi-item" style="margin-bottom: 16px;">
+                <span class="vax-champ-kpi-label">CHAMPION CLASSIFIER</span>
+                <span class="vax-champ-kpi-val" style="font-size: 1.5rem;">Tuned XGBoost (ROC-AUC 0.8351)</span>
+                <span class="vax-champ-kpi-note">Achieves 83.88% Accuracy on 5,342 holdout respondents with 5-Fold Stratified Cross-Validation.</span>
+              </div>
+              <div style="background: var(--bg-tertiary); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.775rem; color: var(--text-secondary);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <span>Primary Decisive Signal:</span>
+                  <strong class="vax-text-teal" style="color: var(--color-teal-400);">Doctor Recommendation (28.5% Importance)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span>Secondary Behavioral Determinant:</span>
+                  <strong style="color: var(--color-teal-400);">Personal Risk &amp; Efficacy Perception</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 Executive KPI Grid -->
+          <div id="vax-kpi-grid" class="vax-kpi-grid"></div>
+        </div>
+      </section>
+
+      <!-- Section 2: Data Intelligence & Cleaning Story -->
+      <section id="data-intelligence">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 01: Preprocessing &amp; Pipeline</span>
+            <h2 class="vax-section-title">Data Cleaning, Imputation &amp; Quality Engineering</h2>
+            <p class="vax-section-desc">
+              How 26,707 raw survey records across 36 features were inspected, imputed, and transformed into an engineered ML feature space without row loss.
+            </p>
+          </div>
+
+          <div id="vax-cleaning-pipeline"></div>
+        </div>
+      </section>
+
+      <!-- Section 3: Exploratory Data Analysis (EDA) -->
+      <section id="eda">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 02: Empirical Evidence</span>
+            <h2 class="vax-section-title">Exploratory Data Analysis &amp; Behavioral Insights</h2>
+            <p class="vax-section-desc">
+              Interactive examination of survey variables. Switch between population share distributions and empirical vaccination uptake rates.
+            </p>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="vax-eda-toolbar">
+            <div class="vax-eda-tabs">
+              <button class="vax-eda-tab-btn active" data-tab="behavior">Vaccination Baseline</button>
+              <button class="vax-eda-tab-btn" data-tab="demographics">Age &amp; Demographics</button>
+              <button class="vax-eda-tab-btn" data-tab="health">Clinical &amp; Healthcare</button>
+              <button class="vax-eda-tab-btn" data-tab="habits">Hygiene &amp; Habits</button>
+              <button class="vax-eda-tab-btn" data-tab="opinions">Opinions &amp; Perceptions</button>
+            </div>
+
+            <div class="vax-eda-views">
+              <button class="vax-eda-view-btn active" data-view="distribution">Population Distribution</button>
+              <button class="vax-eda-view-btn" data-view="rate">H1N1 Uptake Rate (%)</button>
+            </div>
+          </div>
+
+          <!-- Dynamic EDA Container -->
+          <div id="vax-eda-content"></div>
+        </div>
+      </section>
+
+      <!-- Section 4: Statistical Evidence -->
+      <section id="statistical-evidence">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 03: Statistical Rigor</span>
+            <h2 class="vax-section-title">Correlation Matrix &amp; Chi-Square Hypothesis Testing</h2>
+            <p class="vax-section-desc">
+              Validating feature relevance through pairwise Pearson correlations and formal Chi-Square tests of independence (p &lt; 0.05).
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px;">
+            <div>
+              <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 12px;">Feature Inter-Correlation Heatmap</h4>
+              <div id="vax-correlation-heatmap-container"></div>
+            </div>
+            <div>
+              <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 12px;">Hypothesis Significance: Chi-Square Test Results</h4>
+              <div id="vax-chi2-table-container"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Feature Importance -->
+      <section id="features">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 04: Signal Attribution</span>
+            <h2 class="vax-section-title">Ranked Feature Importance &amp; Predictive Signals</h2>
+            <p class="vax-section-desc">
+              Gini impurity reduction and gradient split importance extracted from tree-based ensemble models on the CDC dataset.
+            </p>
+          </div>
+
+          <!-- Filter Toolbar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button class="vax-btn-inspect vax-feat-filter-btn active" data-cat="All">All Features</button>
+              <button class="vax-btn-inspect vax-feat-filter-btn" data-cat="Clinical Advice">Clinical Advice</button>
+              <button class="vax-btn-inspect vax-feat-filter-btn" data-cat="Perception &amp; Beliefs">Perceptions &amp; Beliefs</button>
+              <button class="vax-btn-inspect vax-feat-filter-btn" data-cat="Demographics">Demographics</button>
+              <button class="vax-btn-inspect vax-feat-filter-btn" data-cat="Behavioral Hygiene">Behavioral Hygiene</button>
+              <button class="vax-btn-inspect vax-feat-filter-btn" data-cat="Systemic Access">Healthcare Access</button>
+            </div>
+
+            <div>
+              <input type="text" id="vax-feat-search" class="vax-input" placeholder="Search feature name..." style="width: 240px; padding: 6px 12px;" />
+            </div>
+          </div>
+
+          <div id="vax-features-chart-container" class="vax-chart-box"></div>
+        </div>
+      </section>
+
+      <!-- Section 6: Model Intelligence Lab -->
+      <section id="model-lab">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 05: Algorithmic Benchmarks</span>
+            <h2 class="vax-section-title">Model Intelligence Lab &amp; 9-Classifier Leaderboard</h2>
+            <p class="vax-section-desc">
+              Comprehensive evaluation of 9 machine learning models across holdout test data (N = 5,342). Click table headers to sort, or inspect individual architecture cards.
+            </p>
+          </div>
+
+          <!-- Metric Comparison Bar Chart -->
+          <div class="vax-chart-box" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <h4 style="font-size: 0.9375rem; font-weight: 700;">Cross-Model Comparative Benchmark</h4>
+              <div style="display: flex; gap: 4px;">
+                <button class="vax-btn-inspect vax-model-metric-tab active" data-metric="rocAuc">ROC-AUC</button>
+                <button class="vax-btn-inspect vax-model-metric-tab" data-metric="accuracy">Accuracy</button>
+                <button class="vax-btn-inspect vax-model-metric-tab" data-metric="f1">F1 Score</button>
+                <button class="vax-btn-inspect vax-model-metric-tab" data-metric="precision">Precision</button>
+                <button class="vax-btn-inspect vax-model-metric-tab" data-metric="recall">Recall</button>
+              </div>
+            </div>
+            <div id="vax-model-bars-container"></div>
+          </div>
+
+          <!-- Leaderboard Table -->
+          <div id="vax-leaderboard-table-container"></div>
+
+          <!-- Champion Spotlight Card -->
+          <div class="vax-champion-card">
+            <div class="vax-champion-header">
+              <div>
+                <span class="vax-badge vax-badge-champion" style="margin-bottom: 8px;">Selected Production Architecture</span>
+                <h3 class="vax-champion-title">Tuned Extreme Gradient Boosting (XGBoost)</h3>
+                <p style="font-size: 0.8125rem; color: var(--text-secondary); max-width: 680px; margin-top: 6px;">
+                  Demonstrates the optimal balance between high precision (67.30%) and discriminatory power on the imbalanced 21.2% H1N1 target, outperforming linear baselines by +8.6% in F1 score.
+                </p>
+              </div>
+              <button class="vax-btn vax-btn-primary" onclick="window.VaxComponents.openModelModal('tuned-xgboost')">
+                <span>View Full Parameters ➔</span>
+              </button>
+            </div>
+
+            <div class="vax-champion-kpis">
+              <div class="vax-champ-kpi-item">
+                <span class="vax-champ-kpi-label">ROC-AUC Score</span>
+                <span class="vax-champ-kpi-val">0.8351</span>
+                <span class="vax-champ-kpi-note">Best discrimination across all thresholds</span>
+              </div>
+              <div class="vax-champ-kpi-item">
+                <span class="vax-champ-kpi-label">Test Accuracy</span>
+                <span class="vax-champ-kpi-val">83.88%</span>
+                <span class="vax-champ-kpi-note">5,342 holdout sample validation</span>
+              </div>
+              <div class="vax-champ-kpi-item">
+                <span class="vax-champ-kpi-label">Precision (PPV)</span>
+                <span class="vax-champ-kpi-val">67.30%</span>
+                <span class="vax-champ-kpi-note">Low false positive outreach burden</span>
+              </div>
+              <div class="vax-champ-kpi-item">
+                <span class="vax-champ-kpi-label">Recall (Sensitivity)</span>
+                <span class="vax-champ-kpi-val">46.96%</span>
+                <span class="vax-champ-kpi-note">Captures true vaccine recipients</span>
+              </div>
+              <div class="vax-champ-kpi-item">
+                <span class="vax-champ-kpi-label">F1 Harmonic Mean</span>
+                <span class="vax-champ-kpi-val">55.32%</span>
+                <span class="vax-champ-kpi-note">Highest among all evaluated models</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: ROC Curve Lab -->
+      <section id="roc-lab">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 06: Discrimination Analysis</span>
+            <h2 class="vax-section-title">Receiver Operating Characteristic (ROC) Lab</h2>
+            <p class="vax-section-desc">
+              Interactive multi-curve visualizer illustrating trade-offs between True Positive Rate and False Positive Rate across all 9 classifiers.
+            </p>
+          </div>
+
+          <div id="vax-roc-chart-container"></div>
+        </div>
+      </section>
+
+      <!-- Section 8: Confusion Matrix Inspector -->
+      <section id="confusion-matrix">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 07: Error Topology</span>
+            <h2 class="vax-section-title">Test Set Confusion Matrix &amp; Diagnostic Trade-offs</h2>
+            <p class="vax-section-desc">
+              Actual versus predicted classifications for Tuned XGBoost on 5,342 holdout test individuals.
+            </p>
+          </div>
+
+          <div id="vax-confusion-matrix-container"></div>
+        </div>
+      </section>
+
+      <!-- Section 9: Hyperparameter Optimization & Validation -->
+      <section id="optimization">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Phase 08: Model Tuning &amp; Reliability</span>
+            <h2 class="vax-section-title">Hyperparameter Search &amp; 5-Fold Stratified Cross-Validation</h2>
+            <p class="vax-section-desc">
+              Optimization protocol utilizing RandomizedSearchCV across candidate parameter grids to mitigate overfitting on imbalanced survey data.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <!-- Hyperparameters Grid -->
+            <div class="vax-chart-box">
+              <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 12px;">Optimal Hyperparameter Configuration</h4>
+              <div class="vax-table-scroll">
+                <table class="vax-data-table">
+                  <thead>
+                    <tr>
+                      <th>Hyperparameter</th>
+                      <th>Search Space</th>
+                      <th>Optimal Value</th>
+                      <th>Impact on Generalization</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="vax-td-bold">n_estimators</td>
+                      <td class="vax-td-mono">[100, 200, 300]</td>
+                      <td class="vax-td-mono vax-text-teal">200</td>
+                      <td>Sufficient capacity to capture non-linear perception splits</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">max_depth</td>
+                      <td class="vax-td-mono">[3, 5, 7, 9]</td>
+                      <td class="vax-td-mono vax-text-teal">5</td>
+                      <td>Constrains interaction depth to prevent idiosyncratic memorization</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">learning_rate (eta)</td>
+                      <td class="vax-td-mono">[0.01, 0.05, 0.1, 0.2]</td>
+                      <td class="vax-td-mono vax-text-teal">0.05</td>
+                      <td>Smooth shrinkage parameter preventing gradient overshoot</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">subsample</td>
+                      <td class="vax-td-mono">[0.7, 0.8, 0.9, 1.0]</td>
+                      <td class="vax-td-mono vax-text-teal">0.80</td>
+                      <td>Row subsampling to inject stochastic variance resistance</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">colsample_bytree</td>
+                      <td class="vax-td-mono">[0.6, 0.8, 1.0]</td>
+                      <td class="vax-td-mono vax-text-teal">0.80</td>
+                      <td>Forces splits on secondary perception &amp; demographic features</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Cross-Validation Stability -->
+            <div class="vax-chart-box">
+              <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 12px;">5-Fold Stratified Cross-Validation Consistency</h4>
+              <div class="vax-table-scroll">
+                <table class="vax-data-table">
+                  <thead>
+                    <tr>
+                      <th>Validation Fold</th>
+                      <th>Fold ROC-AUC</th>
+                      <th>Fold Accuracy</th>
+                      <th>Target Split Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="vax-td-bold">Fold 1</td>
+                      <td class="vax-td-mono">0.8364</td>
+                      <td class="vax-td-mono">83.91%</td>
+                      <td>21.24% H1N1 Positive</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">Fold 2</td>
+                      <td class="vax-td-mono">0.8338</td>
+                      <td class="vax-td-mono">83.74%</td>
+                      <td>21.24% H1N1 Positive</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">Fold 3</td>
+                      <td class="vax-td-mono">0.8359</td>
+                      <td class="vax-td-mono">84.02%</td>
+                      <td>21.25% H1N1 Positive</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">Fold 4</td>
+                      <td class="vax-td-mono">0.8342</td>
+                      <td class="vax-td-mono">83.68%</td>
+                      <td>21.23% H1N1 Positive</td>
+                    </tr>
+                    <tr>
+                      <td class="vax-td-bold">Fold 5</td>
+                      <td class="vax-td-mono">0.8352</td>
+                      <td class="vax-td-mono">83.95%</td>
+                      <td>21.24% H1N1 Positive</td>
+                    </tr>
+                    <tr class="vax-row-champion">
+                      <td class="vax-td-bold">Mean &plusmn; Std</td>
+                      <td class="vax-td-mono vax-text-teal vax-td-bold">0.8351 &plusmn; 0.0010</td>
+                      <td class="vax-td-mono vax-td-bold">83.86% &plusmn; 0.14%</td>
+                      <td>Robust across subsamples</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 10: Vaccine Prediction Simulator -->
+      <section id="simulator">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Interactive Clinical Demonstration</span>
+            <h2 class="vax-section-title">Vaccine Uptake Likelihood Simulator</h2>
+            <p class="vax-section-desc">
+              Demonstrates real-time classification probability calibrated against the Tuned XGBoost feature weights. Select an archetype persona or construct a custom respondent profile.
+            </p>
+          </div>
+
+          <!-- Persona Presets Bar -->
+          <div class="vax-persona-bar">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+              Quick Presets: Load Archetype Profile
+            </div>
+            <div id="vax-persona-pills" class="vax-persona-pills"></div>
+          </div>
+
+          <!-- Wizard Card -->
+          <div class="vax-sim-card">
+            <!-- Steps Progress Header -->
+            <div class="vax-wizard-steps-bar">
+              <div class="vax-wizard-step active" data-step="1">
+                <div class="vax-wizard-step-num">1</div>
+                <span class="vax-wizard-step-title">Demographics</span>
+              </div>
+              <div class="vax-wizard-step" data-step="2">
+                <div class="vax-wizard-step-num">2</div>
+                <span class="vax-wizard-step-title">Clinical &amp; Access</span>
+              </div>
+              <div class="vax-wizard-step" data-step="3">
+                <div class="vax-wizard-step-num">3</div>
+                <span class="vax-wizard-step-title">Protective Habits</span>
+              </div>
+              <div class="vax-wizard-step" data-step="4">
+                <div class="vax-wizard-step-num">4</div>
+                <span class="vax-wizard-step-title">Perceptions &amp; Fears</span>
+              </div>
+              <div class="vax-wizard-step" data-step="5">
+                <div class="vax-wizard-step-num">5</div>
+                <span class="vax-wizard-step-title">Prediction Result</span>
+              </div>
+            </div>
+
+            <!-- Dynamic Step Body -->
+            <div id="vax-sim-step-body"></div>
+
+            <!-- Wizard Step Controls -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-color);">
+              <button id="vax-sim-reset" class="vax-btn vax-btn-secondary" style="font-size: 0.775rem;">
+                ↺ Reset to Survey Median
+              </button>
+
+              <div style="display: flex; gap: 12px;">
+                <button id="vax-sim-prev" class="vax-btn vax-btn-secondary" style="display: none;">
+                  ← Previous
+                </button>
+                <button id="vax-sim-next" class="vax-btn vax-btn-primary">
+                  Next Step ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 11: Public Health Policy & Herd Immunity -->
+      <section id="policy">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Public Health Strategy</span>
+            <h2 class="vax-section-title">Actionable Policy Interventions &amp; Herd Immunity Simulation</h2>
+            <p class="vax-section-desc">
+              Translating machine learning discoveries into prioritized public health interventions to achieve population-level respiratory protection (&ge;65% target).
+            </p>
+          </div>
+
+          <!-- Policy Simulation Slider -->
+          <div class="vax-chart-box" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div>
+                <h4 style="font-size: 0.9375rem; font-weight: 700;">Community Immunization Coverage Simulator</h4>
+                <p style="font-size: 0.775rem; color: var(--text-muted);">Adjust coverage rate to evaluate projected population outbreak mitigation</p>
+              </div>
+              <div style="text-align: right;">
+                <span id="vax-policy-rate" style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: var(--color-teal-400);">21%</span>
+                <span style="font-size: 0.7rem; color: var(--text-muted); display: block;">Coverage Rate</span>
+              </div>
+            </div>
+
+            <input type="range" id="vax-policy-slider" min="10" max="95" step="1" value="21" class="vax-range" style="margin-bottom: 12px;" />
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.775rem; color: var(--text-secondary); background: var(--bg-tertiary); padding: 12px 16px; border-radius: var(--radius-sm);">
+              <div>
+                <span>Herd Immunity Status: </span>
+                <span id="vax-policy-status"><span class="vax-text-amber">Sub-Optimal (44% shortfall)</span></span>
+              </div>
+              <div id="vax-policy-risk" style="font-family: monospace; font-weight: 700;">
+                67% Projected Outbreak Risk
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Strategic Policy Pillars -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+            <div class="vax-kpi-card">
+              <span class="vax-kpi-label">Pillar 01 (Clinical)</span>
+              <h4 style="font-size: 1rem; font-weight: 800; margin: 8px 0; color: var(--text-primary);">Physician Verbal Prompt</h4>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+                Mandate physician vaccination prompts in electronic health records during every outpatient encounter to unlock the +35% uptake lift.
+              </p>
+            </div>
+
+            <div class="vax-kpi-card">
+              <span class="vax-kpi-label">Pillar 02 (Communication)</span>
+              <h4 style="font-size: 1rem; font-weight: 800; margin: 8px 0; color: var(--text-primary);">Adverse Event Demystification</h4>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+                Public messaging must directly address reactogenicity fears, clarifying that non-replicating antigens cannot induce illness.
+              </p>
+            </div>
+
+            <div class="vax-kpi-card">
+              <span class="vax-kpi-label">Pillar 03 (Logistics)</span>
+              <h4 style="font-size: 1rem; font-weight: 800; margin: 8px 0; color: var(--text-primary);">Zero Co-Pay Access</h4>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+                Eliminate financial barriers via federally supported mobile pop-up clinics in underserved and lower-income zip codes.
+              </p>
+            </div>
+
+            <div class="vax-kpi-card">
+              <span class="vax-kpi-label">Pillar 04 (Demographic)</span>
+              <h4 style="font-size: 1rem; font-weight: 800; margin: 8px 0; color: var(--text-primary);">Youth Altruism Outreach</h4>
+              <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+                Tailor digital campaigns toward adults aged 18-34, framing vaccination as cocooning protection for vulnerable relatives.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 12: Technical Methodology & Challenges Solved -->
+      <section id="methodology">
+        <div class="vax-container">
+          <div class="vax-section-title-wrap">
+            <span class="vax-section-tag">Engineering Documentation</span>
+            <h2 class="vax-section-title">End-to-End Methodology &amp; Challenges Overcome</h2>
+            <p class="vax-section-desc">
+              Architectural pipeline flow and technical resolutions to class imbalance, high missingness, and multi-collinearity.
+            </p>
+          </div>
+
+          <div style="margin-bottom: 32px;">
+            <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 14px;">Methodology Execution Timeline</h4>
+            <div id="vax-methodology-container"></div>
+          </div>
+
+          <div>
+            <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 14px;">Engineering Challenge Resolution Matrix</h4>
+            <div id="vax-challenges-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="vax-footer">
+      <div class="vax-container vax-footer-inner">
+        <div>
+          <div style="font-weight: 800; color: var(--text-primary);">Vaccine Intelligence &amp; Uptake Prediction Studio</div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+            Based on PRCP-1014: Vaccine Prediction using Machine Learning (CDC 2009 National Flu Survey).
+          </p>
+        </div>
+
+        <div class="vax-footer-citations">
+          <span style="font-size: 0.75rem;">Dataset: <strong>26,707 NHFS Records</strong></span>
+          <span style="font-size: 0.75rem;">Champion: <strong>Tuned XGBoost (0.8351 ROC-AUC)</strong></span>
+          <span style="font-size: 0.75rem;">Validation: <strong>5-Fold Stratified CV</strong></span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Global Model Detail Modal / Drawer -->
+    <div id="vax-model-modal" class="vax-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="vax-modal-card">
+        <div class="vax-modal-header">
+          <div id="vax-modal-title">
+            <span class="vax-modal-title-main">Model Classifier</span>
+            <span class="vax-modal-title-sub">Algorithm Family</span>
+          </div>
+          <button class="vax-modal-close" aria-label="Close Modal">&times;</button>
+        </div>
+        <div id="vax-modal-body" class="vax-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Command Palette (⌘K) -->
+    <div id="vax-cmd-palette" class="vax-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="vax-cmd-card">
+        <div class="vax-cmd-search-wrap">
+          <span>🔍</span>
+          <input type="text" id="vax-cmd-input" class="vax-cmd-input" placeholder="Search insights, models, metrics, or navigate..." autocomplete="off" />
+          <kbd class="vax-cmd-kbd">ESC</kbd>
+        </div>
+        <div id="vax-cmd-results" class="vax-cmd-results"></div>
+      </div>
+    </div>
+
+    <!-- Load Scripts in exact dependency order -->
+    <script src="/js/data.js"></script>
+    <script src="/js/charts.js"></script>
+    <script src="/js/components.js"></script>
+    <script src="/js/navigation.js"></script>
+    <script src="/js/prediction.js"></script>
+    <script src="/js/app.js"></script>
   </body>
 </html>
