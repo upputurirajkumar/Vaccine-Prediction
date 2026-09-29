@@ -36,4 +36,5 @@ This platform predicts whether an individual will receive the **H1N1 Influenza V
 - **Clinical Report Export**: Download structured patient prediction summaries.
 
 ## Tech Stack
-- React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, Canvas Confetti.
+- Pure HTML5, CSS3 (Design System with Dark/Light Themes), and Vanilla JavaScript (ES6+).
+- Zero external CSS or JavaScript framework dependencies; completely self-contained static site ready for GitHub Pages.
